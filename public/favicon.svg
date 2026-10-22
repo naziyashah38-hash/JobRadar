@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <radialGradient id="radarGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <stop offset="0%" stop-color="#6366f1" />
+      <stop offset="100%" stop-color="#312e81" />
+    </radialGradient>
+  </defs>
+  <!-- Radar circles -->
+  <circle cx="50" cy="50" r="45" fill="none" stroke="url(#radarGradient)" stroke-width="2" opacity="0.3" />
+  <circle cx="50" cy="50" r="30" fill="none" stroke="url(#radarGradient)" stroke-width="2" opacity="0.5" />
+  <circle cx="50" cy="50" r="15" fill="none" stroke="url(#radarGradient)" stroke-width="2" opacity="0.7" />
+  <!-- Radar sweep line -->
+  <line x1="50" y1="5" x2="50" y2="10" stroke="#6366f1" stroke-width="3" stroke-linecap="round">
+    <animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="4s" repeatCount="indefinite" />
+  </line>
+  <!-- Center dot -->
+  <circle cx="50" cy="50" r="3" fill="#6366f1" />
+</svg>

@@ -4,26 +4,24 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function RadarChart({ applications }) {
-  const statusCounts = {
-    applied: applications.filter((app) => app.status === "applied").length,
-    interview: applications.filter((app) => app.status === "interview").length,
-    rejected: applications.filter((app) => app.status === "rejected").length,
-    offer: applications.filter((app) => app.status === "offer").length,
-  };
+  // Define status order EXPLICITLY to ensure color matching
+  const statusOrder = ["applied", "interview", "ghosted", "withdrawn", "rejected", "offer"];
+  const statusLabels = ["Applied", "Interview", "Ghosted", "Withdrawn", "Rejected", "Offer"];
+  const statusColors = ["#6366f1", "#f59e0b", "#64748b", "#9ca3af", "#ef4444", "#10b981"];
 
-  const total = Object.values(statusCounts).reduce((a, b) => a + b, 0);
+  // Count applications per status (in the SAME order as statusOrder)
+  const statusCounts = statusOrder.map(status =>
+    applications.filter(app => app.status === status).length
+  );
+
+  const total = statusCounts.reduce((a, b) => a + b, 0);
 
   const data = {
-    labels: ["Applied", "Interview", "Rejected", "Offer"],
+    labels: statusLabels,
     datasets: [
       {
-        data: Object.values(statusCounts),
-        backgroundColor: [
-          "#6366f1", // indigo-500
-          "#f59e0b", // amber-500
-          "#ef4444", // rose-500
-          "#10b981", // emerald-500
-        ],
+        data: statusCounts,
+        backgroundColor: statusColors, // Colors match the order of statusCounts
         borderWidth: 0,
       },
     ],
@@ -39,7 +37,7 @@ export default function RadarChart({ applications }) {
           padding: 15,
           usePointStyle: true,
           font: { size: 12 },
-          color: "#64748b", // slate-500
+          color: "#64748b",
         },
       },
       tooltip: {
@@ -56,6 +54,7 @@ export default function RadarChart({ applications }) {
     cutout: "70%",
   };
 
+  // Hide chart if no applications
   if (total === 0) return null;
 
   return (

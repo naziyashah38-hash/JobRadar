@@ -26,7 +26,7 @@ export default function Navbar() {
       className="flex justify-between items-center mb-8"
     >
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+        <div className="w-10 h-10 bg-gradient-to-br from-green-300 to-green-800 rounded-xl flex items-center justify-center shadow-lg">
           <Target className="w-6 h-6 text-white" />
         </div>
         <div>

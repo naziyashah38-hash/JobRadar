@@ -1,13 +1,22 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Calendar, Link2, Briefcase, Home, FileText } from "react-feather";
+import { X, Calendar, Link2, Briefcase, Home, Globe, Building2, FileText } from "lucide-react";
 import { format } from "date-fns";
 
+// Updated status and work mode options
 const STATUS_OPTIONS = [
   { value: "applied", label: "Applied" },
   { value: "interview", label: "Interview" },
+  { value: "ghosted", label: "Ghosted" },
+  { value: "withdrawn", label: "Withdrawn" },
   { value: "rejected", label: "Rejected" },
   { value: "offer", label: "Offer" },
+];
+
+const WORK_MODE_OPTIONS = [
+  { value: "onsite", label: "Onsite" },
+  { value: "remote", label: "Remote" },
+  { value: "hybrid", label: "Hybrid" },
 ];
 
 export default function ApplicationForm({
@@ -19,6 +28,8 @@ export default function ApplicationForm({
   const [formData, setFormData] = useState({
     company: "",
     role: "",
+    city: "",       // NEW: City field
+    workMode: "remote", // NEW: Work mode (default: remote)
     link: "",
     date: format(new Date(), "yyyy-MM-dd"),
     status: "applied",
@@ -27,11 +38,22 @@ export default function ApplicationForm({
 
   useEffect(() => {
     if (initialData) {
-      setFormData(initialData);
+      setFormData({
+        company: initialData.company || "",
+        role: initialData.role || "",
+        city: initialData.city || "",       // NEW
+        workMode: initialData.workMode || "remote", // NEW
+        link: initialData.link || "",
+        date: initialData.date || format(new Date(), "yyyy-MM-dd"),
+        status: initialData.status || "applied",
+        notes: initialData.notes || "",
+      });
     } else {
       setFormData({
         company: "",
         role: "",
+        city: "",       // NEW
+        workMode: "remote", // NEW
         link: "",
         date: format(new Date(), "yyyy-MM-dd"),
         status: "applied",
@@ -55,7 +77,7 @@ export default function ApplicationForm({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-slate-900/50 dark:bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-slate-900/50 dark:bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
           onClick={onClose}
         >
           <motion.div
@@ -84,7 +106,7 @@ export default function ApplicationForm({
                     Company
                   </label>
                   <div className="relative">
-                    <Home className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                     <input
                       type="text"
                       value={formData.company}
@@ -113,9 +135,47 @@ export default function ApplicationForm({
                   </div>
                 </div>
 
+                {/* NEW: City Field */}
                 <div className="relative">
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-                    Date
+                    City
+                  </label>
+                  <div className="relative">
+                    <Home className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <input
+                      type="text"
+                      value={formData.city}
+                      onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                      className="w-full pl-10 pr-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-50 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      placeholder="San Francisco"
+                    />
+                  </div>
+                </div>
+
+                {/* NEW: Work Mode Field */}
+                <div className="relative">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                    Work Mode
+                  </label>
+                  <div className="relative">
+                    <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                    <select
+                      value={formData.workMode}
+                      onChange={(e) => setFormData({ ...formData, workMode: e.target.value })}
+                      className="w-full pl-10 pr-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 appearance-none"
+                    >
+                      {WORK_MODE_OPTIONS.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="relative">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                     Application Date
                   </label>
                   <div className="relative">
                     <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
@@ -188,7 +248,7 @@ export default function ApplicationForm({
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 rounded-lg text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 transition-all font-medium"
+                  className="flex-1 px-4 py-2 rounded-lg text-white bg-emerald-600 hover:bg-emerald-700 transition-all font-medium"
                 >
                   {initialData ? "Update" : "Add Application"}
                 </button>

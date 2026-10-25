@@ -1,8 +1,15 @@
 import { motion } from "framer-motion";
-import { Edit2, Trash2, ExternalLink } from "react-feather";
+import { Edit2, Trash2, ExternalLink } from "lucide-react";
 import StatusPulse from "./StatusPulse";
 
-export default function ApplicationCard({ app, onUpdate, onDelete, statusOptions }) {
+// Work mode icons and colors
+const WORK_MODE_ICONS = {
+  onsite: { icon: "🏢", color: "text-slate-600 dark:text-slate-400" },
+  remote: { icon: "🌍", color: "text-indigo-600 dark:text-indigo-400" },
+  hybrid: { icon: "🏠💻", color: "text-purple-600 dark:text-purple-400" },
+};
+
+export default function ApplicationCard({ app, onUpdate, onDelete }) {
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
     return date.toLocaleDateString("en-US", {
@@ -16,6 +23,8 @@ export default function ApplicationCard({ app, onUpdate, onDelete, statusOptions
     const colors = {
       applied: "bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300",
       interview: "bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300",
+      ghosted: "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400", // NEW: Ghosted
+      withdrawn: "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400", // NEW: Withdrawn
       rejected: "bg-rose-100 dark:bg-rose-900/30 text-rose-800 dark:text-rose-300",
       offer: "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300",
     };
@@ -28,7 +37,7 @@ export default function ApplicationCard({ app, onUpdate, onDelete, statusOptions
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, x: -100 }}
       transition={{ duration: 0.3 }}
-      className={`glass rounded-xl p-5 card-hover ${getStatusColor(app.status)}`}
+      className={` rounded-xl p-5 card-hover ${getStatusColor(app.status)}`}
     >
       <div className="flex justify-between items-start mb-3">
         <div>
@@ -43,11 +52,19 @@ export default function ApplicationCard({ app, onUpdate, onDelete, statusOptions
       </div>
 
       <div className="flex flex-wrap gap-3 mb-3 text-sm">
+        {/* City and Work Mode */}
+        {app.city && (
+          <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
+            <span>📍</span> {app.city}
+          </span>
+        )}
+        {app.workMode && (
+          <span className={`flex items-center gap-1 ${WORK_MODE_ICONS[app.workMode].color}`}>
+            {WORK_MODE_ICONS[app.workMode].icon}
+          </span>
+        )}
         <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          {formatDate(app.date)}
+          <span>📅</span> {formatDate(app.date)}
         </span>
         {app.link && (
           <a
